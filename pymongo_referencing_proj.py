@@ -1,28 +1,33 @@
+# Importing libraries
+# requests allows python to communicate with APIs via HTTP
 import requests
 from pymongo import MongoClient
 client = MongoClient("mongodb://localhost:27017/")
+# pymongo library for working with mongodb
+# client url connects to mongodb server
 
-db = client["starwars"]
-characters = db["characters"]
+db = client["starwars"]        # select database to use
+characters = db["characters"]  # references for collections
 starships = db["starships"]
 
 
 # Get starships function
 def get_starships():
-    url = "https://swapi.dev/api/starships/"
-    starships = []
+    url = "https://swapi.dev/api/starships/"  # API endpoint stored in variable
+    starships = []                            # empty list created to store starship data from API
 
-    while url:
-        response = requests.get(url, timeout=15)
-        response.raise_for_status()
-        data = response.json()
+# could use try and except here for timeout
+    while url:                                      # while url isn't empty
+        response = requests.get(url, timeout=15)    # GET request sent to endpoint, returned is stored in response
+        response.raise_for_status()                 # check whether HTTP request resulted in an error
+        data = response.json()                      # transform response data into json form save to new var
 
         starships.extend(data["results"])
         url = data["next"]
 
     return starships
 
-get_starships()
+get_starships() # call function
 
 
 # get pilot ids function
